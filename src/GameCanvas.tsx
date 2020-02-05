@@ -76,9 +76,9 @@ const GameCanvas: React.FC<Props> = () => {
                 ctx.stroke();
                 ctx.fillRect(tilesPos[yRel] * tileWidth, yPos, tileWidth, tileHeight);
             }
-            let delta = (performance.now() - lastCalledTime)/1000;
+            let delta = (performance.now() - lastCalledTime) / 1000;
             lastCalledTime = performance.now();
-            setFps(Math.round(1/delta));
+            setFps(Math.round(1 / delta));
         });
         return () => {
             clearInterval(frameUpdater);
@@ -92,12 +92,11 @@ const GameCanvas: React.FC<Props> = () => {
         let canvasX = event.clientX - boundingClientReact.left;
         if (canvasY < canvasRef.current.height / gameConfig.tilesQuantity.height * (gameConfig.tilesQuantity.height - 1)) return;
         let tileMousePos = Math.ceil(canvasX / (canvasRef.current.width / gameConfig.tilesQuantity.width)) - 1;
-        console.log(tileMousePos, tilesPos);
 
         if (tileMousePos === tilesPos.slice(-1)[0]) {
-            tilesPos.splice(0, 1);
+            tilesPos.pop();
+            tilesPos.unshift(random(0, gameConfig.tilesQuantity.width - 1));
             setCount(count => count + 1);
-            tilesPos.push(random(0, gameConfig.tilesQuantity.width - 1));
         } else {
             alert("Missed!");
             setCount(0);
