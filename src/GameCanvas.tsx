@@ -29,7 +29,11 @@ const getDerivedCanvasSize = (): CanvasDimensions => {
 
 const random = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
 
+const getRandomTilePos = () => random(0, gameConfig.tilesQuantity.width - 1);
+
 const GameCanvas: React.FC<Props> = () => {
+    let [fps, setFps] = useState(0);
+    let [count, setCount] = useState(0);
     let canvasRef = useRef(null as HTMLCanvasElement | null);
     let [canvasDimensions, setCanvasDimensions] = useState(getDerivedCanvasSize());
     useEffect(() => {//resize canvas on window resize
@@ -39,11 +43,12 @@ const GameCanvas: React.FC<Props> = () => {
             window.removeEventListener("resize", updateCanvasSize);
         }
     }, []);
+    let tilesPos = new Array(gameConfig.tilesQuantity.height).fill(null).map(() => getRandomTilePos());
+    let lastCalledTime = performance.now();
 
     useEffect(() => {//update canvas frame
         if (canvasRef.current === null) return;
         let tilesQuantity = gameConfig.tilesQuantity;
-        let tilesPos = new Array(gameConfig.tilesQuantity.height + 1).fill(null).map(() => random(0, tilesQuantity.width - 1));
         let frameUpdater = setInterval(() => {
             let canvasEl = canvasRef.current;
             if (canvasEl === null) return;
@@ -63,7 +68,7 @@ const GameCanvas: React.FC<Props> = () => {
                 ctx.lineTo(xPos, canvasEl.height);
                 ctx.stroke();
             }
-            for (let yRel = 0; yRel < tilesQuantity.height; yRel++) {//Horizontal lines
+            for (let yRel = 0; yRel < tilesQuantity.height; yRel++) {//Horizontal lines and tiles
                 ctx.beginPath();
                 let yPos = yRel * tileHeight;
                 ctx.moveTo(0, yPos);
@@ -71,6 +76,9 @@ const GameCanvas: React.FC<Props> = () => {
                 ctx.stroke();
                 ctx.fillRect(tilesPos[yRel] * tileWidth, yPos, tileWidth, tileHeight);
             }
+            let delta = (performance.now() - lastCalledTime)/1000;
+            lastCalledTime = performance.now();
+            setFps(Math.round(1/delta));
         });
         return () => {
             clearInterval(frameUpdater);
@@ -82,18 +90,37 @@ const GameCanvas: React.FC<Props> = () => {
         let boundingClientReact = canvasRef.current.getBoundingClientRect();
         let canvasY = event.clientY - boundingClientReact.top;
         let canvasX = event.clientX - boundingClientReact.left;
-        console.log(canvasX, canvasY);
+        if (canvasY < canvasRef.current.height / gameConfig.tilesQuantity.height * (gameConfig.tilesQuantity.height - 1)) return;
+        let tileMousePos = Math.ceil(canvasX / (canvasRef.current.width / gameConfig.tilesQuantity.width)) - 1;
+        console.log(tileMousePos, tilesPos);
+
+        if (tileMousePos === tilesPos.slice(-1)[0]) {
+            tilesPos.splice(0, 1);
+            setCount(count => count + 1);
+            tilesPos.push(random(0, gameConfig.tilesQuantity.width - 1));
+        } else {
+            alert("Missed!");
+            setCount(0);
+        }
     }, []);
 
-    return <canvas
-        ref={canvasRef}
-        onClick={clickCanvas}
-        width={canvasDimensions.width}
-        height={canvasDimensions.height}
-        style={{
-            width: canvasDimensions.width,
-            height: canvasDimensions.height
-        }} />
+    return <>
+        <h2 style={{ color: "darkred", position: "absolute", top: "0px", left: "0px", right: "0px", textAlign: "center", fontWeight: "bold", background: "rgba(255, 255, 255, 0.5)" }}>
+            {count}
+        </h2>
+        <h5 style={{ color: "darkred", position: "absolute", top: "55px", left: "0px", right: "0px", textAlign: "center", fontWeight: "bold", background: "rgba(255, 255, 255, 0.5)" }}>
+            {fps}
+        </h5>
+        <canvas
+            ref={canvasRef}
+            onClick={clickCanvas}
+            width={canvasDimensions.width}
+            height={canvasDimensions.height}
+            style={{
+                width: canvasDimensions.width,
+                height: canvasDimensions.height
+            }} />
+    </>
 }
 
 export default GameCanvas;
