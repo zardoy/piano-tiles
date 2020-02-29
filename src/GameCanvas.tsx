@@ -1,15 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { GameModes } from "./App";
 
-interface Props {
-    gameMode: Exclude<GameModes, null>
-}
-
-type CanvasDimensions = {
-    width: number
-    height: number,
-};
-
 const maxCanvasWidth = 600;
 
 const gameConfig = {
@@ -18,6 +9,15 @@ const gameConfig = {
         height: 4
     }
 }
+
+interface Props {
+    gameMode: Exclude<GameModes, null>
+}
+
+type CanvasDimensions = {
+    width: number
+    height: number,
+};
 
 const getDerivedCanvasSize = (): CanvasDimensions => {
     let screenWidth = window.document.documentElement.offsetWidth;
@@ -33,20 +33,34 @@ const getRandomTilePos = () => random(0, gameConfig.tilesQuantity.width - 1);
 
 const GameCanvas: React.FC<Props> = () => {
     let [fps, setFps] = useState(0);
-    let [count, setCount] = useState(0);
+    let [score, setScore] = useState(0);
     let canvasRef = useRef(null as HTMLCanvasElement | null);
-    let [canvasDimensions, setCanvasDimensions] = useState(getDerivedCanvasSize());
-    useEffect(() => {//resize canvas on window resize
-        const updateCanvasSize = () => setCanvasDimensions(getDerivedCanvasSize());
-        window.addEventListener("resize", updateCanvasSize);
-        return () => {
-            window.removeEventListener("resize", updateCanvasSize);
-        }
-    }, []);
-    let tilesPos = new Array(gameConfig.tilesQuantity.height).fill(null).map(() => getRandomTilePos());
+    let [canvasSize, setCanvasSize] = useState(getDerivedCanvasSize());
+    let tilesPos = new Array(gameConfig.tilesQuantity.height - 1).fill(null).map(() => getRandomTilePos());
+    let clickedTilePos: number | null = null;
     let lastCalledTime = performance.now();
 
-    useEffect(() => {//update canvas frame
+    const registerTileHit = (tileNumber/* from 1 */: number) => {
+        if (tileNumber < 1 || tileNumber > gameConfig.tilesQuantity.width) return;
+        let tilePos = tileNumber - 1;
+        if (tilePos === tilesPos.slice(-1)[0]) {
+            tilesPos.pop();
+            tilesPos.unshift(random(0, gameConfig.tilesQuantity.width - 1));
+            setScore(count => count + 1);
+            clickedTilePos = tilePos;
+        } else {
+            setScore(0);
+            //j
+        }
+    }
+
+    useEffect(() => {//resize canvas effect
+        const updateCanvasSize = () => setCanvasSize(getDerivedCanvasSize());
+        window.addEventListener("resize", updateCanvasSize);
+        return () => window.removeEventListener("resize", updateCanvasSize);
+    }, []);
+
+    useEffect(() => {//update canvas effect
         if (canvasRef.current === null) return;
         let tilesQuantity = gameConfig.tilesQuantity;
         let frameUpdater = setInterval(() => {
@@ -61,20 +75,26 @@ const GameCanvas: React.FC<Props> = () => {
             //Drawing grid
             ctx.strokeStyle = "gray";
             ctx.fillStyle = "black";
+            for (let yRel = 0; yRel < tilesQuantity.height; yRel++) {//Horizontal lines and tiles
+                let yPos = yRel * tileHeight;
+                if (yRel < tilesQuantity.height - 1) {
+                    ctx.fillRect(tilesPos[yRel] * tileWidth, yPos, tileWidth, tileHeight);//regular tile
+                } else if (clickedTilePos !== null) {
+                    ctx.fillStyle = "rgb(180, 180, 180)";
+                    ctx.fillRect(clickedTilePos * tileWidth, yPos, tileWidth, tileHeight);//clicked tile
+                    ctx.fillStyle = "black";
+                }
+                ctx.beginPath();
+                ctx.moveTo(0, yPos);
+                ctx.lineTo(canvasEl.width, yPos);
+                ctx.stroke();
+            }
             for (let xRel = 0; xRel < tilesQuantity.width; xRel++) {//Vertical lines
                 ctx.beginPath();
                 let xPos = xRel * tileWidth;
                 ctx.moveTo(xPos, 0);
                 ctx.lineTo(xPos, canvasEl.height);
                 ctx.stroke();
-            }
-            for (let yRel = 0; yRel < tilesQuantity.height; yRel++) {//Horizontal lines and tiles
-                ctx.beginPath();
-                let yPos = yRel * tileHeight;
-                ctx.moveTo(0, yPos);
-                ctx.lineTo(canvasEl.width, yPos);
-                ctx.stroke();
-                ctx.fillRect(tilesPos[yRel] * tileWidth, yPos, tileWidth, tileHeight);
             }
             let delta = (performance.now() - lastCalledTime) / 1000;
             lastCalledTime = performance.now();
@@ -85,39 +105,44 @@ const GameCanvas: React.FC<Props> = () => {
         }
     }, [canvasRef]);
 
-    let clickCanvas = useCallback(event => {
+    let canvasClickListener = useCallback(event => {
         if (canvasRef.current === null) return;
         let boundingClientReact = canvasRef.current.getBoundingClientRect();
         let canvasY = event.clientY - boundingClientReact.top;
         let canvasX = event.clientX - boundingClientReact.left;
-        if (canvasY < canvasRef.current.height / gameConfig.tilesQuantity.height * (gameConfig.tilesQuantity.height - 1)) return;
-        let tileMousePos = Math.ceil(canvasX / (canvasRef.current.width / gameConfig.tilesQuantity.width)) - 1;
+        // if (canvasY < canvasRef.current.height / gameConfig.tilesQuantity.height * (gameConfig.tilesQuantity.height - 1)) return;
+        let clickedTilePos = Math.ceil(canvasX / (canvasRef.current.width / gameConfig.tilesQuantity.width));
+        registerTileHit(clickedTilePos);
+    }, []);
 
-        if (tileMousePos === tilesPos.slice(-1)[0]) {
-            tilesPos.pop();
-            tilesPos.unshift(random(0, gameConfig.tilesQuantity.width - 1));
-            setCount(count => count + 1);
-        } else {
-            alert("Missed!");
-            setCount(0);
+    useEffect(() => {//register keyboard input
+        let keyListener = (event: KeyboardEvent) => {
+            let code = event.code;
+            ["Digit", "Numpad"].forEach((selector) => {
+                if (code.startsWith(selector)) registerTileHit(+code.slice(selector.length));
+            })
         }
+
+        window.addEventListener("keydown", keyListener);
+        return () => window.removeEventListener("keydown", keyListener);
     }, []);
 
     return <>
-        <h2 style={{ color: "darkred", position: "absolute", top: "0px", left: "0px", right: "0px", textAlign: "center", fontWeight: "bold", background: "rgba(255, 255, 255, 0.5)" }}>
-            {count}
-        </h2>
-        <h5 style={{ color: "darkred", position: "absolute", top: "55px", left: "0px", right: "0px", textAlign: "center", fontWeight: "bold", background: "rgba(255, 255, 255, 0.5)" }}>
-            {fps}
-        </h5>
+        <code>
+            <h1 className="score-counter">
+                {score < 100 ? (score + 100).toString().slice(1) : score}
+                <br />
+                <span className="fps-counter">{fps}</span>
+            </h1>
+        </code>
         <canvas
             ref={canvasRef}
-            onClick={clickCanvas}
-            width={canvasDimensions.width}
-            height={canvasDimensions.height}
+            onClick={canvasClickListener}
+            width={canvasSize.width}
+            height={canvasSize.height}
             style={{
-                width: canvasDimensions.width,
-                height: canvasDimensions.height
+                width: canvasSize.width,
+                height: canvasSize.height
             }} />
     </>
 }

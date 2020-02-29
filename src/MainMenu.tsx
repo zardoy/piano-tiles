@@ -8,11 +8,23 @@ interface Props {
 
 const MainMenu: React.FC<Props> = ({ setGameMode }) => {
     let gameModeButtons = useMemo(() => {
-        return Object.entries(availableGameModes).map(([gameModeName]) => <Button key={gameModeName} onClick={() => setGameMode(gameModeName as GameModes)}>{gameModeName}</Button>)
+        return Object.entries(availableGameModes).map(
+            ([gameModeName]) =>
+                <Button
+                    key={gameModeName}
+                    color="primary"
+                    onClick={() => setGameMode(gameModeName as GameModes)}
+                >
+                    {gameModeName}
+                </Button>
+        )
     }, [setGameMode]);
 
-    return <div className="bg-white d-flex justify-content-center flex-column">
-        <span>Choose mode: </span>
+    return <div className="main-menu">
+        <h1 className="header">
+            Piano Tiles online
+        </h1>
+        <span className="text-muted font-italic">Select Game Mode:</span>
         {gameModeButtons}
     </div>
 }
