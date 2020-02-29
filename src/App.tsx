@@ -10,7 +10,9 @@ export type GameModes = keyof typeof availableGameModes | null;
 
 const App: React.FC = () => {
     let [gameMode, setGameMode] = useState(null as GameModes);
-    return gameMode === null ? <MainMenu setGameMode={setGameMode} /> : <GameCanvas gameMode={gameMode} />;
+    return <div className="center-content">
+        {gameMode === null ? <MainMenu setGameMode={setGameMode} /> : <GameCanvas gameMode={gameMode} />}
+    </div>;
 }
 
 export default App;

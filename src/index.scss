@@ -3,8 +3,9 @@ body {
     user-select: none;
 }
 
-.app {
-    height: 100vh;
+.center-content {
+    display: flex;
+    justify-content: center;
 }
 
 .main-menu {
