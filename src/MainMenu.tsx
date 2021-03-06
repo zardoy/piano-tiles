@@ -1,32 +1,38 @@
-import React, { useMemo } from "react";
-import { Button } from "reactstrap";
-import { GameModes, availableGameModes } from "./App";
+import React from "react";
 
-interface Props {
-    setGameMode: (gameMode: GameModes) => void
+import { Link } from "react-router-dom";
+
+import { Button, Grid, Typography } from "@material-ui/core";
+
+interface GameMode {
+    label: string;
+    id: string;
 }
 
-const MainMenu: React.FC<Props> = ({ setGameMode }) => {
-    let gameModeButtons = useMemo(() => {
-        return Object.entries(availableGameModes).map(
-            ([gameModeName]) =>
+const gameModes: GameMode[] = [{
+    label: "Peak",
+    id: "peak"
+}];
+
+const BigText: React.FC<React.ComponentProps<typeof Typography>> = (props) => {
+    return <Typography gutterBottom align="center" {...props} />;
+};
+
+const MainMenu: React.FC = () => {
+    return <Grid container direction="column" justify="flex-start" alignContent="center" style={{ margin: 50 }}>
+        <BigText variant="h3">Piano Tiles online</BigText>
+        <BigText variant="h5" color="textSecondary">Select Game Mode</BigText>
+        {
+            gameModes.map(({ id: modeId, label }) =>
                 <Button
-                    key={gameModeName}
-                    color="primary"
-                    onClick={() => setGameMode(gameModeName as GameModes)}
-                >
-                    {gameModeName}
-                </Button>
-        )
-    }, [setGameMode]);
-
-    return <div className="main-menu">
-        <h1 className="header">
-            Piano Tiles online
-        </h1>
-        <span className="text-muted font-italic">Select Game Mode:</span>
-        {gameModeButtons}
-    </div>
-}
+                    key={modeId}
+                    component={Link}
+                    to={`/game/${modeId}`}
+                    variant="outlined"
+                >{label}</Button>
+            )
+        }
+    </Grid>;
+};
 
 export default MainMenu;

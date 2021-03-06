@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
-import MainMenu from './MainMenu';
-import GameCanvas from './GameCanvas';
+import React from "react";
 
-export const availableGameModes = {
-    "peak": ""
-};
+import { HashRouter, Redirect, Route, Switch } from "react-router-dom";
 
-export type GameModes = keyof typeof availableGameModes | null;
+import { CssBaseline } from "@material-ui/core";
+
+import Game from "./Game";
+import MainMenu from "./MainMenu";
 
 const App: React.FC = () => {
-    let [gameMode, setGameMode] = useState(null as GameModes);
-    return <div className="center-content">
-        {gameMode === null ? <MainMenu setGameMode={setGameMode} /> : <GameCanvas gameMode={gameMode} />}
-    </div>;
-}
+    return <>
+        <CssBaseline />
+        <HashRouter>
+            <Switch>
+                <Route path="/" exact>
+                    <MainMenu />
+                </Route>
+                <Route path="/game/:modeId">
+                    <Game />
+                </Route>
+                <Redirect from="/" to="/unknown path" />
+            </Switch>
+        </HashRouter>
+    </>;
+};
 
 export default App;
