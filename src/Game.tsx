@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import { ArrowBackIos } from "@material-ui/icons";
 
-const gameConfig = {
+export const gameConfig = {
     maxWidth: 600,
     tilesQuantity: {
         width: 4,
@@ -17,10 +17,10 @@ const gameConfig = {
 
 const controlsMap: Record<string, string> = {
     // keyboard key then xbox controller button
-    1: "A A",
-    2: "S B",
-    3: "D X",
-    4: "F Y",
+    1: "D A",
+    2: "F B",
+    3: "J X",
+    4: "K Y",
 };
 
 const getRandomTilePos = () => _.random(gameConfig.tilesQuantity.width - 1);

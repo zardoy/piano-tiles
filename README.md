@@ -13,7 +13,7 @@ Play now at https://zardoy.github.io/piano-tiles
 | ▢         | X           | 3    |
 | △         | Y           | 4    |
 
-Keyboard layout is also supported. Use numbers or ASDF keys.
+Keyboard layout is also supported. Use numbers or OSU keymap (DF JK) keys.
 
 ## Start Locally
 
@@ -32,6 +32,8 @@ The page will reload if you make edits.<br />
 
 - [ ] Controller | Keyboard layout in SVG
 - [ ] Switch from react-scripts to snowpack-scripts in all projects
+- [ ] Enable hash router with proper handling pwa
+- [ ] Offline
 
 ## Learn More
 
