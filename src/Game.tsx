@@ -142,8 +142,9 @@ const Game: React.FC = () => {
                 ctx.font = "60px sans-serif";
                 ctx.textAlign = "center";
                 const tileNumber = tilePositions.slice(-2)[0] + 1;
+                const keyboardKey = tilesQuantity.width > 4 ? tileNumber.toString() : controlsMap[tileNumber].split(" ")[0];
                 ctx.fillText(
-                    activeInput === "keyboard" ? tileNumber.toString() :
+                    activeInput === "keyboard" ? keyboardKey :
                         controlsMap[tileNumber].split(" ")[1],
                     tileSize.width * tilePositions.slice(-2)[0] + tileSize.width / 2,
                     tileSize.height * (tilesQuantity.height - 2) + tileSize.height / 2
