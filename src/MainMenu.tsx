@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
-import { Button, Grid, Slider, Typography } from "@material-ui/core";
+import { Button, Grid, Link, Slider, Typography } from "@material-ui/core";
 
 import { gameConfig } from "./Game";
 
@@ -29,7 +29,7 @@ const MainMenu: React.FC = () => {
                 gameModes.map(({ id: modeId, label }) =>
                     <Button
                         key={modeId}
-                        component={Link}
+                        component={RouterLink}
                         to={`/game/${modeId}`}
                         variant="outlined"
                         size="large"
@@ -57,6 +57,7 @@ const MainMenu: React.FC = () => {
                     })
                 }
             </Grid>
+            <Link color="textSecondary" href="https://github.com/zardoy/piano-tiles" style={{ position: "absolute", bottom: 0, right: 0, }}>View on GitHub</Link>
         </Grid>
     </>;
 };
