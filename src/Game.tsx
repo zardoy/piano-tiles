@@ -11,7 +11,7 @@ const gameConfig = {
     maxWidth: 600,
     tilesQuantity: {
         width: 2,
-        height: 4
+        height: 8
     }
 };
 
