@@ -1,0 +1,8 @@
+body {
+    user-select: none;
+}
+
+/* TODO why it's not in reset.css??? */
+[hidden] {
+    display: none !important;
+}

@@ -26,6 +26,13 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br />
 
+## TODO
+
+<!-- OMG just do that -->
+
+- [ ] Controller | Keyboard layout in SVG
+- [ ] Switch from react-scripts to snowpack-scripts in all projects
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).

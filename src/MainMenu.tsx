@@ -19,7 +19,7 @@ const BigText: React.FC<React.ComponentProps<typeof Typography>> = (props) => {
 };
 
 const MainMenu: React.FC = () => {
-    return <Grid container direction="column" justify="flex-start" alignContent="center" style={{ margin: 50 }}>
+    return <Grid container direction="column" justify="flex-start" alignContent="center" style={{ padding: 50 }}>
         <BigText variant="h3">Piano Tiles online</BigText>
         <BigText variant="h5" color="textSecondary">Select Game Mode</BigText>
         {
@@ -29,6 +29,7 @@ const MainMenu: React.FC = () => {
                     component={Link}
                     to={`/game/${modeId}`}
                     variant="outlined"
+                    size="large"
                 >{label}</Button>
             )
         }

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { HashRouter, Redirect, Route, Switch } from "react-router-dom";
+import { MemoryRouter, Redirect, Route, Switch } from "react-router-dom";
 
 import { CssBaseline } from "@material-ui/core";
 
@@ -10,7 +10,7 @@ import MainMenu from "./MainMenu";
 const App: React.FC = () => {
     return <>
         <CssBaseline />
-        <HashRouter>
+        <MemoryRouter>
             <Switch>
                 <Route path="/" exact>
                     <MainMenu />
@@ -20,7 +20,7 @@ const App: React.FC = () => {
                 </Route>
                 <Redirect from="/" to="/unknown path" />
             </Switch>
-        </HashRouter>
+        </MemoryRouter>
     </>;
 };
 
