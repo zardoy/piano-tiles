@@ -1,26 +1,37 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Piano Tiles
 
-## Available Scripts
+Play now at https://zardoy.github.io/piano-tiles
 
-In the project directory, you can run:
+> Works well on mobile platforms
 
-### `yarn start`
+## GamePad Layout
 
-Runs the app in the development mode.<br />
+| PS button | XBOX button | Tile |
+| --------- | ----------- | ---- |
+| X         | A           | 1    |
+| O         | B           | 2    |
+| ▢         | X           | 3    |
+| △         | Y           | 4    |
+
+Keyboard layout is also supported. Use numbers or ASDF keys.
+
+## Start Locally
+
+> This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+In the project directory, you need to run `yarn start`.
+
+It'll run the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
 
-### `yarn build`
+## TODO
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<!-- OMG just do that -->
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- [ ] Controller | Keyboard layout in SVG
+- [ ] Switch from react-scripts to snowpack-scripts in all projects
 
 ## Learn More
 
