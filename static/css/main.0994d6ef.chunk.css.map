@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/global.css"],"names":[],"mappings":"AAAA,KACI,wBAAiB,CAAjB,oBAAiB,CAAjB,gBACJ,CAGA,SACI,sBACJ","file":"main.0994d6ef.chunk.css","sourcesContent":["body {\n    user-select: none;\n}\n\n/* TODO why it's not in reset.css??? */\n[hidden] {\n    display: none !important;\n}"]}
