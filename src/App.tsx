@@ -18,7 +18,7 @@ const App: React.FC = () => {
                 <Route path="/game/:modeId">
                     <Game />
                 </Route>
-                <Redirect from="/" to="/unknown path" />
+                <Redirect from="/" to="/" />
             </Switch>
         </MemoryRouter>
     </>;
