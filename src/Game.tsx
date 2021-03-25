@@ -10,8 +10,8 @@ import { ArrowBackIos } from "@material-ui/icons";
 const gameConfig = {
     maxWidth: 600,
     tilesQuantity: {
-        width: 2,
-        height: 8
+        width: 4,
+        height: 4
     }
 };
 
