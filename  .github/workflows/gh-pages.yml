@@ -1,7 +1,8 @@
 name: GitHub pages
 on:
   push:
-    branches: [main, master]
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
