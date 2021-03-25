@@ -10,7 +10,7 @@ import { ArrowBackIos } from "@material-ui/icons";
 const gameConfig = {
     maxWidth: 600,
     tilesQuantity: {
-        width: 4,
+        width: 2,
         height: 4
     }
 };
@@ -163,7 +163,7 @@ const Game: React.FC = () => {
                 // todo-high: use javascript.info animation approach to increase fps
                 render();
                 const interval = setInterval(() => {
-                    if ((offsetPerc += 0.2) >= 1) {
+                    if ((offsetPerc += 0.15) >= 1) {
                         clearInterval(interval);
                         offsetPerc = 0;
                         tilePositions.pop();
