@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link as RouterLink } from "react-router-dom";
 
-import { Button, Grid, Link, Slider, Typography } from "@material-ui/core";
+import { Button, Checkbox, Grid, Link, Slider, Typography } from "@material-ui/core";
 
 import { gameConfig } from "./Game";
 
@@ -56,6 +56,12 @@ const MainMenu: React.FC = () => {
                         </>;
                     })
                 }
+                <Typography>
+                    <Checkbox
+                        defaultChecked={gameConfig.showKeyboardOrGamepadHints}
+                        onChange={(_, checked) => gameConfig.showKeyboardOrGamepadHints = checked}
+                    />Show keyboard & gamepad hints
+                </Typography>
             </Grid>
             <Link color="textSecondary" href="https://github.com/zardoy/piano-tiles" style={{ position: "absolute", bottom: 0, right: 0, }}>View on GitHub</Link>
         </Grid>

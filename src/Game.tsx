@@ -12,7 +12,8 @@ export const gameConfig = {
     tilesQuantity: {
         width: 4,
         height: 4
-    }
+    },
+    showKeyboardOrGamepadHints: true
 };
 
 const controlsMap: Record<string, string> = {
@@ -137,7 +138,7 @@ const Game: React.FC = () => {
                 );
             });
 
-            if (activeInput !== "touch") {
+            if (activeInput !== "touch" && gameConfig.showKeyboardOrGamepadHints) {
                 ctx.fillStyle = "white";
                 ctx.font = "60px sans-serif";
                 ctx.textAlign = "center";
@@ -162,7 +163,6 @@ const Game: React.FC = () => {
             if (xPos === tilePositions.slice(-2)[0]) {
                 setScore(score => score + 1);
                 // todo-high: use javascript.info animation approach to increase fps
-                render();
                 const interval = setInterval(() => {
                     if ((offsetPerc += 0.15) >= 1) {
                         clearInterval(interval);
@@ -177,6 +177,7 @@ const Game: React.FC = () => {
                 // tilePositions = resetTilePositions();
                 setScore(0);
             }
+            render();
         };
         const canvasClick = ({ clientY, clientX }: { clientY: number, clientX: number; }) => {
             // let boundingClientReact = canvas.getBoundingClientRect();
@@ -210,7 +211,7 @@ const Game: React.FC = () => {
 
         const interval = setInterval(() => {
             // todo fix types
-            let somethingIsPressed = false;
+            let somethingWasPressed = false;
             for (const tileNumber in controlsMap) {
                 const [keyboardKey, gamepadButton] = controlsMap[tileNumber].split(" ");
                 const pressed = controlsOr(
@@ -219,19 +220,23 @@ const Game: React.FC = () => {
                     gamepad.button(gamepadButton),
                 ).query();
                 if (!pressed) continue;
-                somethingIsPressed = true;
+                somethingWasPressed = true;
                 if (inputReleased) registerHit(+tileNumber - 1);
                 break;
             }
-            inputReleased = !somethingIsPressed;
-            if (somethingIsPressed) {
-                activeInput = gamepad.isConnected() ? "gamepad" : "keyboard";
-            }
+            inputReleased = !somethingWasPressed;
+            if (somethingWasPressed && gamepad.isConnected()) activeInput = "gamepad";
         }, 10);
+        const detectKeyboardInput = () => {
+            activeInput = "keyboard";
+            render();
+        };
+        window.addEventListener("keydown", detectKeyboardInput);
         return () => {
             window.removeEventListener("resize", resize);
             canvas.removeEventListener("pointerdown", pointerHandle);
             canvas.removeEventListener("touchstart", cancelTouchMove);
+            window.removeEventListener("keydown", detectKeyboardInput);
             clearInterval(interval);
         };
     }, []);
